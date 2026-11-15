@@ -172,111 +172,179 @@ const CATS = [
   ["✈️", "Ein Erlebnis oder eine Reise", "erlebnis"],
   ["💆‍♀️", "Wellness & Entspannung", "wellness"],
   ["🌿", "Etwas für mein Hobby", "hobby"],
+  ["👨‍👩‍👧", "Zeit mit der Familie", "familie"],
   ["🤔", "Weiß nicht genau", "surprise1"]
 ];
 const N = {
   start:  { topic: "Los geht's", q: "Worüber würdest du dich gerade am meisten freuen?", opts: CATS },
-  start2: { topic: "Noch etwas", q: "Schön! Was würde dir sonst noch Freude machen?", opts: CATS.slice(0, 6) },
+  start2: { topic: "Noch etwas", q: "Schön! Was würde dir sonst noch Freude machen?", opts: CATS },
 
   /* Wohnung */
   wohnen: { topic: "Wohnung", q: "Woran denkst du bei der Wohnung?", opts: [
     ["🛋️", "Sofa oder Sessel", "sofa"], ["🛏️", "Schlafzimmer & Bett", "bett"],
     ["💡", "Lampen & Licht", "licht"], ["🖼️", "Deko & Bilder", "deko"],
-    ["🧶", "Teppich, Kissen & Decken", "textil"], ["🪴", "Pflanzen & Balkon", "balkon"] ] },
+    ["🧶", "Teppich, Kissen & Decken", "textil"], ["🪴", "Pflanzen & Balkon", "balkon"],
+    ["🛁", "Badezimmer", "bad"], ["🗄️", "Möbel & Ordnung", "moebel"] ] },
   sofa:   { topic: "Wohnung · Sofa", q: "Was genau wäre schön?", next: "wohnstil", opts: [
-    [, "Ein neues Sofa"], [, "Ein gemütlicher Sessel zum Lesen"], [, "Ein Relaxsessel mit Fußteil"], [, "Ein Hocker oder Pouf"] ] },
+    [, "Ein neues Sofa"], [, "Ein gemütlicher Sessel zum Lesen"], [, "Ein Relaxsessel mit Fußteil"], [, "Ein Hocker oder Pouf"],
+    [, "Ein Schlafsofa für Gäste"], [, "Ein großes Ecksofa"], [, "Ein neuer Couchtisch"], [, "Ein kleiner Beistelltisch"] ] },
   bett:   { topic: "Wohnung · Schlafzimmer", q: "Was würde dir im Schlafzimmer gefallen?", next: "wohnstil", opts: [
-    [, "Schöne neue Bettwäsche"], [, "Neue Kissen und Bettdecke"], [, "Ein Matratzen-Topper"], [, "Bademantel und flauschige Handtücher"] ] },
+    [, "Schöne neue Bettwäsche"], [, "Neue Kissen und Bettdecke"], [, "Ein Matratzen-Topper"], [, "Ein neues Bett"],
+    [, "Eine schöne Tagesdecke"], [, "Eine Nachttischlampe"], [, "Ein Lichtwecker"], [, "Ein Spiegel oder eine Kommode"] ] },
   licht:  { topic: "Wohnung · Licht", q: "Welche Art von Licht?", next: "wohnstil", opts: [
-    [, "Eine Stehlampe"], [, "Eine Tischlampe"], [, "Kerzen und Lichterketten"], [, "Smarte Lampen, per Handy steuerbar"] ] },
+    [, "Eine Stehlampe"], [, "Eine Tischlampe"], [, "Kerzen und Lichterketten"], [, "Smarte Lampen, per Handy steuerbar"],
+    [, "Eine Leuchte über dem Esstisch"], [, "Eine Leselampe beim Sessel"], [, "Licht für Balkon oder Garten"], [, "Dimmbares Stimmungslicht"] ] },
   deko:   { topic: "Wohnung · Deko", q: "Welche Deko spricht dich an?", next: "wohnstil", opts: [
-    [, "Bilder oder Wandkunst"], [, "Vasen und Blumen"], [, "Duftkerzen oder Raumduft"], [, "Ein Fotobuch mit Familienfotos"] ] },
+    [, "Bilder oder Wandkunst"], [, "Vasen und Blumen"], [, "Duftkerzen oder Raumduft"], [, "Ein Fotobuch mit Familienfotos"],
+    [, "Bilderrahmen mit Familienfotos"], [, "Ein schöner Spiegel"], [, "Skulpturen oder Figuren"], [, "Eine Wanduhr"] ] },
   textil: { topic: "Wohnung · Textilien", q: "Was davon am ehesten?", next: "wohnstil", opts: [
-    [, "Ein neuer Teppich"], [, "Kissen fürs Sofa"], [, "Eine weiche Kuscheldecke"], [, "Neue Vorhänge"] ] },
+    [, "Ein neuer Teppich"], [, "Kissen fürs Sofa"], [, "Eine weiche Kuscheldecke"], [, "Neue Vorhänge"],
+    [, "Tischdecke und Servietten"], [, "Ein Läufer für den Flur"], [, "Sitzkissen für die Stühle"], [, "Ein Badteppich"] ] },
   balkon: { topic: "Wohnung · Pflanzen", q: "Was wäre schön für Pflanzen und Balkon?", next: "wohnstil", opts: [
-    [, "Schöne Zimmerpflanzen"], [, "Balkonmöbel"], [, "Ein Kräutergarten"], [, "Blumenkästen und Töpfe"] ] },
+    [, "Schöne Zimmerpflanzen"], [, "Balkonmöbel"], [, "Ein Kräutergarten"], [, "Blumenkästen und Töpfe"],
+    [, "Ein Hängesessel"], [, "Ein Sonnenschirm"], [, "Eine Lichterkette für draußen"], [, "Ein Vogelhaus oder Insektenhotel"] ] },
+  bad:    { topic: "Wohnung · Bad", q: "Was würde dein Bad schöner machen?", next: "wohnstil", opts: [
+    [, "Flauschige Handtücher"], [, "Ein Bademantel"], [, "Badezusätze und Pflege"], [, "Ein schönes Seifenspender-Set"],
+    [, "Ein neuer Badteppich"], [, "Ein Spiegel mit Licht"], [, "Ein Regal für mehr Ordnung"], [, "Duftkerzen fürs Bad"] ] },
+  moebel: { topic: "Wohnung · Möbel", q: "Welches Möbelstück?", next: "wohnstil", opts: [
+    [, "Ein Sideboard oder eine Kommode"], [, "Ein Regal"], [, "Ein neuer Esstisch"], [, "Neue Stühle"],
+    [, "Ein Schrank"], [, "Eine Garderobe für den Eingang"], [, "Ein kleiner Schreibtisch"], [, "Schöne Körbe und Boxen"] ] },
   wohnstil: { topic: "Stil", q: "Welcher Stil gefällt dir dabei?", next: "farben", opts: [
-    [, "Modern und schlicht"], [, "Gemütlich und warm"], [, "Elegant und edel"], [, "Natürlich, mit viel Holz"] ] },
+    [, "Modern und schlicht"], [, "Gemütlich und warm"], [, "Elegant und edel"], [, "Natürlich, mit viel Holz"],
+    [, "Skandinavisch und hell"], [, "Landhaus"], [, "Vintage und Retro"], [, "Mediterran"] ] },
   farben: { topic: "Farben", q: "Welche Farben magst du am liebsten?", next: "more", opts: [
-    [, "Hell: Weiß, Beige, Creme"], [, "Warm: Braun, Terrakotta, Senf"], [, "Ruhig: Grün, Blau, Salbei"], [, "Kräftig: Rot, Pink, bunt"] ] },
+    [, "Weiß und Creme"], [, "Beige und Sand"], [, "Braun und Terrakotta"], [, "Grün und Salbei"],
+    [, "Blau"], [, "Rosa und Altrosa"], [, "Rot und kräftige Farben"], [, "Schwarz und Grau"] ] },
 
   /* Küche */
   kueche: { topic: "Küche", q: "Was wäre schön für die Küche?", opts: [
     ["⚙️", "Ein Küchengerät", "geraete"], ["🍲", "Töpfe & Pfannen", "toepfe"],
     ["🍽️", "Geschirr & Gläser", "geschirr"], ["🧁", "Etwas zum Backen", "backen"],
-    ["☕", "Kaffee & Tee", "kaffee"], ["🔪", "Gute Messer", "kqual"] ] },
+    ["☕", "Kaffee & Tee", "kaffee"], ["🔪", "Gute Messer", "kqual"],
+    ["📖", "Kochbücher", "kqual"], ["🫙", "Ordnung & Vorratsdosen", "kqual"] ] },
   geraete: { topic: "Küche · Geräte", q: "Welches Gerät?", next: "kqual", opts: [
-    [, "Eine Kaffeemaschine"], [, "Eine Küchenmaschine zum Rühren und Kneten"], [, "Eine Heißluftfritteuse"], [, "Ein Mixer oder Smoothie-Maker"] ] },
+    [, "Eine Kaffeemaschine"], [, "Eine Küchenmaschine zum Rühren und Kneten"], [, "Eine Heißluftfritteuse"], [, "Ein Mixer oder Smoothie-Maker"],
+    [, "Wasserkocher und Toaster"], [, "Ein Dampfgarer"], [, "Ein Brotbackautomat"], [, "Eine Eismaschine"] ] },
   toepfe: { topic: "Küche · Töpfe", q: "Was davon am ehesten?", next: "kqual", opts: [
-    [, "Ein neues Pfannenset"], [, "Ein Topfset"], [, "Ein Bräter aus Gusseisen"], [, "Ein Wok"] ] },
+    [, "Ein neues Pfannenset"], [, "Ein Topfset"], [, "Ein Bräter aus Gusseisen"], [, "Ein Wok"],
+    [, "Eine Grillpfanne"], [, "Ein Schnellkochtopf"], [, "Schöne Auflaufformen"], [, "Ein Raclette- oder Fondue-Set"] ] },
   geschirr: { topic: "Küche · Geschirr", q: "Was würdest du gerne erneuern?", next: "kqual", opts: [
-    [, "Ein neues Tellerset"], [, "Schöne Wein- und Wassergläser"], [, "Kaffeetassen oder Teekanne"], [, "Servierplatten und Schüsseln"] ] },
+    [, "Ein neues Tellerset"], [, "Schöne Weingläser"], [, "Kaffeetassen"], [, "Eine Teekanne"],
+    [, "Servierplatten und Schüsseln"], [, "Neues Besteck"], [, "Eine Etagere"], [, "Müsli- und Suppenschalen"] ] },
   backen: { topic: "Küche · Backen", q: "Was würde dir beim Backen Freude machen?", next: "kqual", opts: [
-    [, "Neue Backformen"], [, "Eine Küchenmaschine"], [, "Ein Backkurs"], [, "Ein schönes Backbuch"] ] },
+    [, "Neue Backformen"], [, "Eine Küchenmaschine"], [, "Ein Backkurs"], [, "Ein schönes Backbuch"],
+    [, "Ein Tortenständer"], [, "Backmatten und Zubehör"], [, "Ein Waffeleisen"], [, "Ein Set Ausstechformen"] ] },
   kaffee: { topic: "Küche · Kaffee & Tee", q: "Was davon?", next: "kqual", opts: [
-    [, "Eine Siebträgermaschine"], [, "Ein Milchschäumer"], [, "Ein Teeset mit Kanne"], [, "Feine Kaffee- oder Teesorten"] ] },
+    [, "Eine Siebträgermaschine"], [, "Ein Milchschäumer"], [, "Ein Teeset mit Kanne"], [, "Feine Kaffee- oder Teesorten"],
+    [, "Ein Kaffeevollautomat"], [, "Eine French Press"], [, "Eine Kaffeemühle"], [, "Eine schöne Thermoskanne"] ] },
   kqual: { topic: "Küche", q: "Was ist dir dabei am wichtigsten?", next: "more", opts: [
-    [, "Beste Qualität, hält ewig"], [, "Es sieht schön aus"], [, "Praktisch und einfach"], [, "Etwas Neues zum Ausprobieren"] ] },
+    [, "Beste Qualität, hält ewig"], [, "Es sieht schön aus"], [, "Praktisch und einfach"], [, "Etwas Neues zum Ausprobieren"],
+    [, "Es spart mir Zeit"], [, "Leicht zu reinigen"], [, "Braucht wenig Platz"], [, "Nachhaltig gemacht"] ] },
 
   /* Für mich */
   mich: { topic: "Für dich", q: "Woran denkst du für dich?", opts: [
     ["💍", "Schmuck", "schmuck"], ["🌸", "Parfum & Kosmetik", "parfum"],
-    ["👗", "Kleidung", "kleidung"], ["👜", "Tasche oder Accessoire", "tasche"],
-    ["👟", "Schuhe", "schuhe"] ] },
+    ["👗", "Kleidung", "kleidung"], ["👜", "Tasche", "tasche"],
+    ["👟", "Schuhe", "schuhe"], ["💇‍♀️", "Ein Beauty-Termin", "beauty"],
+    ["🕶️", "Accessoires", "acc"], ["🧦", "Gemütliches für zu Hause", "cozy"] ] },
   schmuck: { topic: "Schmuck", q: "Welcher Schmuck?", next: "metall", opts: [
-    [, "Eine Halskette"], [, "Ohrringe"], [, "Ein Armband"], [, "Eine Uhr"] ] },
-  metall: { topic: "Schmuck", q: "Gold oder Silber?", next: "more", opts: [
-    [, "Gold"], [, "Silber"], [, "Roségold"], [, "Egal, Hauptsache schön"] ] },
-  parfum: { topic: "Parfum & Kosmetik", q: "Was für ein Duft passt zu dir?", next: "more", opts: [
-    [, "Blumig"], [, "Frisch und leicht"], [, "Warm und sinnlich"], [, "Lieber Pflege und Cremes"] ] },
+    [, "Eine Halskette"], [, "Ohrringe"], [, "Ein Armband"], [, "Eine Uhr"],
+    [, "Ein Ring"], [, "Ein Anhänger mit Gravur"], [, "Eine Brosche"], [, "Ein Schmuckkästchen"] ] },
+  metall: { topic: "Schmuck", q: "Was gefällt dir bei Schmuck am besten?", next: "more", opts: [
+    [, "Gold"], [, "Silber"], [, "Roségold"], [, "Perlen"],
+    [, "Mit Edelsteinen"], [, "Schlicht und fein"], [, "Groß und auffällig"], [, "Egal, Hauptsache schön"] ] },
+  parfum: { topic: "Parfum & Kosmetik", q: "Was passt zu dir?", next: "more", opts: [
+    [, "Ein blumiger Duft"], [, "Ein frischer, leichter Duft"], [, "Ein warmer, sinnlicher Duft"], [, "Ein fruchtiger Duft"],
+    [, "Ein holziger Duft"], [, "Ein pudriger Duft"], [, "Lieber Pflege und Cremes"], [, "Make-up"] ] },
   kleidung: { topic: "Kleidung", q: "Was würdest du gerne tragen?", next: "farben", opts: [
-    [, "Ein kuscheliger Pullover"], [, "Ein schönes Kleid"], [, "Ein Mantel oder eine Jacke"], [, "Ein Schal oder Tuch"] ] },
+    [, "Ein kuscheliger Pullover"], [, "Ein schönes Kleid"], [, "Ein Mantel oder eine Jacke"], [, "Ein Schal oder Tuch"],
+    [, "Eine schöne Bluse"], [, "Eine gute Hose oder Jeans"], [, "Eine Strickjacke"], [, "Sportkleidung"] ] },
   tasche: { topic: "Tasche", q: "Welche Art?", next: "farben", opts: [
-    [, "Eine Handtasche"], [, "Ein großer Shopper"], [, "Ein Portemonnaie"], [, "Eine kleine Umhängetasche"] ] },
+    [, "Eine Handtasche"], [, "Ein großer Shopper"], [, "Ein Portemonnaie"], [, "Eine kleine Umhängetasche"],
+    [, "Ein Rucksack"], [, "Eine Clutch für den Abend"], [, "Eine Reisetasche"], [, "Eine Kosmetiktasche"] ] },
   schuhe: { topic: "Schuhe", q: "Welche Schuhe?", next: "farben", opts: [
-    [, "Bequeme Sneaker"], [, "Elegante Schuhe"], [, "Stiefel"], [, "Gemütliche Hausschuhe"] ] },
+    [, "Bequeme Sneaker"], [, "Elegante Schuhe"], [, "Stiefel"], [, "Gemütliche Hausschuhe"],
+    [, "Sandalen"], [, "Ballerinas"], [, "Wanderschuhe"], [, "Loafer"] ] },
+  beauty: { topic: "Beauty", q: "Welcher Termin würde dich freuen?", next: "more", opts: [
+    [, "Beim Friseur"], [, "Eine Maniküre"], [, "Eine Pediküre"], [, "Eine Gesichtsbehandlung"],
+    [, "Eine Make-up-Beratung"], [, "Eine Farb- und Stilberatung"], [, "Wimpern und Augenbrauen"], [, "Ein Kosmetik-Set für zu Hause"] ] },
+  acc: { topic: "Accessoires", q: "Welches Accessoire?", next: "farben", opts: [
+    [, "Ein Seidenschal"], [, "Eine Sonnenbrille"], [, "Schöne Handschuhe"], [, "Ein Hut oder eine Mütze"],
+    [, "Ein Gürtel"], [, "Haarschmuck"], [, "Ein schöner Regenschirm"], [, "Ein Schlüsselanhänger mit Gravur"] ] },
+  cozy: { topic: "Gemütlich", q: "Was wäre schön für gemütliche Abende?", next: "farben", opts: [
+    [, "Ein schöner Pyjama"], [, "Warme Hausschuhe"], [, "Ein Morgenmantel"], [, "Kuschelsocken"],
+    [, "Eine Wärmflasche"], [, "Eine weiche Strickjacke"], [, "Bequeme Loungewear"], [, "Eine Schlafmaske aus Seide"] ] },
 
   /* Erlebnis */
   erlebnis: { topic: "Erlebnis", q: "Was für ein Erlebnis?", opts: [
     ["🧳", "Eine Reise", "reise"], ["🎭", "Konzert, Musical oder Theater", "kultur"],
     ["🍷", "Feines Essen", "essen"], ["🎨", "Einen Kurs ausprobieren", "kurs"],
-    ["⛰️", "Ein Ausflug", "ausflug"] ] },
-  reise: { topic: "Reise", q: "Wohin würde es dich ziehen?", next: "mitwem", opts: [
-    [, "Eine Städtereise"], [, "Ans Meer"], [, "In die Berge und Natur"], [, "In ein Wellnesshotel"] ] },
+    ["⛰️", "Ein Ausflug", "ausflug"], ["🚴‍♀️", "Etwas Aktives", "aktiv"],
+    ["🎈", "Ein kleines Abenteuer", "abenteuer"], ["📸", "Ein Fotoshooting", "mitwem"] ] },
+  reise: { topic: "Reise", q: "Was für eine Reise?", next: "mitwem", opts: [
+    [, "Eine Städtereise", "staedte"], [, "Ans Meer"], [, "In die Berge und Natur"], [, "In ein Wellnesshotel"],
+    [, "Eine Kreuzfahrt"], [, "Eine Rundreise mit dem Auto"], [, "Eine schöne Zugreise"], [, "Ein Ferienhaus auf dem Land"] ] },
+  staedte: { topic: "Reise · Städte", q: "Welche Stadt würde dich reizen?", next: "mitwem", opts: [
+    [, "Paris"], [, "Rom"], [, "Tromsø"], [, "Barcelona"],
+    [, "Wien"], [, "Lissabon"], [, "Florenz"], [, "Eine andere Stadt"] ] },
   kultur: { topic: "Kultur", q: "Was würdest du am liebsten sehen?", next: "mitwem", opts: [
-    [, "Ein Konzert"], [, "Ein Musical"], [, "Theater oder Oper"], [, "Eine Comedy-Show"] ] },
+    [, "Ein Konzert"], [, "Ein Musical"], [, "Theater oder Oper"], [, "Eine Comedy-Show"],
+    [, "Ballett"], [, "Ein Museum oder eine Ausstellung"], [, "Ein besonderer Kinoabend"], [, "Eine Lesung"] ] },
   essen: { topic: "Essen", q: "Wie genießt du am liebsten?", next: "mitwem", opts: [
-    [, "Ein besonderes Restaurant"], [, "Eine Weinprobe"], [, "Ein schöner Brunch"], [, "Ein Koch kommt nach Hause"] ] },
+    [, "Ein besonderes Restaurant"], [, "Eine Weinprobe"], [, "Ein schöner Brunch"], [, "Ein Koch kommt nach Hause"],
+    [, "Ein Afternoon Tea"], [, "Eine Käse- oder Schokoladen-Degustation"], [, "Ein Dinner mit Aussicht"], [, "Eine Streetfood-Tour"] ] },
   kurs: { topic: "Kurs", q: "Welcher Kurs reizt dich?", next: "mitwem", opts: [
-    [, "Kochkurs"], [, "Töpfern"], [, "Malen"], [, "Tanzen"] ] },
+    [, "Kochkurs"], [, "Töpfern"], [, "Malen"], [, "Tanzen"],
+    [, "Fotografie"], [, "Blumen binden"], [, "Schmuck selber machen"], [, "Yoga"] ] },
   ausflug: { topic: "Ausflug", q: "Was für ein Ausflug?", next: "mitwem", opts: [
-    [, "Eine Schifffahrt auf dem See"], [, "Bergbahn und Wandern"], [, "Ein Thermalbad"], [, "Ein schönes Städtchen entdecken"] ] },
+    [, "Eine Schifffahrt auf dem See"], [, "Bergbahn und Wandern"], [, "Ein Thermalbad"], [, "Ein schönes Städtchen entdecken"],
+    [, "Ein Zoo oder Tierpark"], [, "Ein Spaziergang durch die Weinberge"], [, "Ein Schloss besichtigen"], [, "Ein Picknick am See"] ] },
+  aktiv: { topic: "Aktiv", q: "Was würde dir Spaß machen?", next: "mitwem", opts: [
+    [, "Ein Yoga-Retreat"], [, "Eine E-Bike-Tour"], [, "Golf ausprobieren"], [, "Schwimmen oder Aquafit"],
+    [, "Ein Wandertag mit Führung"], [, "Schneeschuhwandern"], [, "Stand-up-Paddling"], [, "Ein Tanzabend"] ] },
+  abenteuer: { topic: "Abenteuer", q: "Welches Abenteuer?", next: "mitwem", opts: [
+    [, "Eine Fahrt im Heißluftballon"], [, "Eine Hundeschlittenfahrt"], [, "Ein Helikopterflug"], [, "Ein Escape-Room"],
+    [, "Glamping in der Natur"], [, "Rafting"], [, "Nordlichter sehen"], [, "Eine Nacht im Baumhaus"] ] },
   mitwem: { topic: "Erlebnis", q: "Mit wem würdest du das am liebsten machen?", next: "more", opts: [
-    [, "Mit meinem Partner"], [, "Mit der ganzen Familie"], [, "Mit einer Freundin"], [, "Ganz für mich allein"] ] },
+    [, "Mit meinem Partner"], [, "Mit der ganzen Familie"], [, "Mit meinen Kindern"], [, "Mit einer Freundin"],
+    [, "Mit mehreren Freundinnen"], [, "Mit meinen Geschwistern"], [, "Ganz für mich allein"], [, "Egal, Hauptsache schön"] ] },
 
   /* Wellness */
   wellness: { topic: "Wellness", q: "Wie entspannst du am liebsten?", opts: [
     ["🧖‍♀️", "Ein Spa-Tag", "mitwem"], ["💆‍♀️", "Eine Massage", "more"],
-    ["🏨", "Ein Wellness-Wochenende", "mitwem"], ["🛁", "Wellness für zu Hause", "wellhome"] ] },
+    ["🏨", "Ein Wellness-Wochenende", "mitwem"], ["🛁", "Wellness für zu Hause", "wellhome"],
+    ["♨️", "Ein Thermalbad", "mitwem"], ["🔥", "Sauna", "mitwem"],
+    ["🧘‍♀️", "Yoga oder Meditation", "mitwem"], ["✨", "Eine Kosmetikbehandlung", "more"] ] },
   wellhome: { topic: "Wellness zu Hause", q: "Was davon?", next: "more", opts: [
-    [, "Bademantel und weiche Handtücher"], [, "Badezusätze und Pflege"], [, "Ein Massagegerät"], [, "Duftkerzen und Raumduft"] ] },
+    [, "Bademantel und weiche Handtücher"], [, "Badezusätze und Pflege"], [, "Ein Massagegerät"], [, "Duftkerzen und Raumduft"],
+    [, "Ein Fußbad"], [, "Ein Aroma-Diffuser"], [, "Ein Set Gesichtsmasken"], [, "Ein Wärmekissen"] ] },
 
   /* Hobby */
   hobby: { topic: "Hobby", q: "Für welches Hobby?", next: "hobbywas", opts: [
-    ["🌻", "Garten"], ["📚", "Lesen"], ["🧵", "Stricken & Nähen"],
-    ["🚶‍♀️", "Sport & Bewegung"], ["🎵", "Musik"], ["📷", "Fotos & Basteln"] ] },
+    ["🌻", "Garten"], ["📚", "Lesen"], ["🧵", "Stricken & Nähen"], ["🚶‍♀️", "Sport & Bewegung"],
+    ["🎵", "Musik"], ["📷", "Fotos & Basteln"], ["🥘", "Kochen & Backen"], ["🖌️", "Malen & Zeichnen"] ] },
   hobbywas: { topic: "Hobby", q: "Was würde dir dabei Freude machen?", next: "more", opts: [
-    [, "Neues Material oder Zubehör"], [, "Ein Kurs, um besser zu werden"], [, "Ein Buch oder Gutschein dafür"], [, "Ein besonderes Gerät oder Werkzeug"] ] },
+    [, "Neues Material oder Zubehör"], [, "Ein Kurs, um besser zu werden"], [, "Ein Buch oder Gutschein dafür"], [, "Ein besonderes Gerät oder Werkzeug"],
+    [, "Ein Zeitschriften-Abo"], [, "Ein Workshop mit einer Freundin"], [, "Ein Ausflug zu einer Messe oder einem Markt"], [, "Ein schöner Platz zum Arbeiten"] ] },
 
-  /* Überrasch mich */
+  /* Familie */
+  familie: { topic: "Familie", q: "Was würdest du gerne mit der Familie machen?", next: "more", opts: [
+    [, "Ein gemeinsames Essen"], [, "Ein Familienausflug"], [, "Ein Familien-Fotoshooting"], [, "Ein Fotobuch mit Erinnerungen"],
+    [, "Ein Spieleabend"], [, "Ein gemeinsames Wochenende weg"], [, "Ein Kurs zusammen"], [, "Ein Besuch bei Verwandten"] ] },
+
+  /* Weiß nicht genau */
   surprise1: { topic: "Über dich", q: "Worüber freust du dich am meisten?", next: "surprise2", opts: [
-    [, "Etwas, das ich täglich verwenden kann"], [, "Etwas Persönliches mit emotionalem Wert"], [, "Etwas Hochwertiges und Besonderes"], [, "Ein Erlebnis, an das ich mich erinnere"] ] },
+    [, "Etwas, das ich täglich verwenden kann"], [, "Etwas Persönliches mit emotionalem Wert"], [, "Etwas Hochwertiges und Besonderes"], [, "Ein Erlebnis, an das ich mich erinnere"],
+    [, "Etwas Selbstgemachtes"], [, "Etwas Schönes zum Anschauen"], [, "Etwas zum Verwöhnen"], [, "Gemeinsame Zeit"] ] },
   surprise2: { topic: "Über dich", q: "Was gönnst du dir selbst am seltensten?", next: "surprise3", opts: [
-    [, "Besondere, hochwertige Dinge"], [, "Wellness und Entspannung"], [, "Kleidung, Schuhe oder Schmuck"], [, "Besondere Erlebnisse und Reisen"] ] },
+    [, "Besondere, hochwertige Dinge"], [, "Wellness und Entspannung"], [, "Kleidung, Schuhe oder Schmuck"], [, "Besondere Erlebnisse und Reisen"],
+    [, "Zeit nur für mich"], [, "Auswärts gut essen"], [, "Neue Sachen für die Wohnung"], [, "Konzerte, Theater, Kultur"] ] },
   surprise3: { topic: "Über dich", q: "Wenn du dir spontan etwas gönnen dürftest, was wäre es?", next: "surprise4", opts: [
-    [, "Für etwas Schönes für die Wohnung"], [, "Für etwas für die Küche"], [, "Für Kleidung, Schmuck oder Kosmetik"], [, "Für eine Reise oder ein Erlebnis"] ] },
+    [, "Etwas Schönes für die Wohnung"], [, "Etwas für die Küche"], [, "Kleidung, Schmuck oder Kosmetik"], [, "Eine Reise oder ein Erlebnis"],
+    [, "Ein Wellness-Tag"], [, "Ein feines Essen"], [, "Etwas für mein Hobby"], [, "Ein Ausflug mit der Familie"] ] },
   surprise4: { topic: "Über dich", q: "Was beschreibt dich am besten?", next: "more", opts: [
-    [, "Ich freue mich über praktische Dinge"], [, "Ich liebe schöne, hochwertige Sachen"], [, "Ich sammle lieber Erlebnisse als Dinge"], [, "Ich liebe persönliche Überraschungen"] ] },
+    [, "Ich freue mich über praktische Dinge"], [, "Ich liebe schöne, hochwertige Sachen"], [, "Ich sammle lieber Erlebnisse als Dinge"], [, "Ich liebe persönliche Überraschungen"],
+    [, "Ich mag es gemütlich zu Hause"], [, "Ich probiere gerne Neues aus"], [, "Familie geht mir über alles"], [, "Ich genieße gutes Essen und Trinken"] ] },
 
   /* Abschluss */
   more: { topic: "Fast fertig", q: "Gibt es noch etwas, worüber du dich freuen würdest?", opts: [
@@ -372,7 +440,7 @@ function build() {
     <h2 id="qh">${esc(n.q)}</h2>
     <div class="opts${tiles ? " tiles" : ""}" role="radiogroup" aria-labelledby="qh">
       ${n.opts.map((o, i) => `<button type="button" class="opt" role="radio" aria-checked="false" data-i="${i}">
-        ${o[0] ? `<span class="ic" aria-hidden="true">${o[0]}</span>` : `<b>${"ABCDEFG"[i]}</b>`}
+        ${o[0] ? `<span class="ic" aria-hidden="true">${o[0]}</span>` : `<b>${"ABCDEFGH"[i]}</b>`}
         <span class="t">${esc(o[1])}</span></button>`).join("")}
     </div>`;
   card.querySelectorAll(".opt").forEach(b => b.onclick = () => pick(b));
@@ -462,8 +530,8 @@ $("back").onclick = back;
 document.addEventListener("keydown", e => {
   if (!N[cur] || N[cur].type === "text" || e.metaKey || e.ctrlKey || e.altKey) return;
   const k = e.key.toUpperCase();
-  let idx = "1234567".indexOf(k);
-  if (idx < 0) idx = "ABCDEFG".indexOf(k);
+  let idx = "12345678".indexOf(k);
+  if (idx < 0) idx = "ABCDEFGH".indexOf(k);
   const b = idx >= 0 ? stage.querySelectorAll(".opt")[idx] : null;
   if (b) pick(b);
   else if (e.key === "Backspace" || e.key === "ArrowLeft") back();
