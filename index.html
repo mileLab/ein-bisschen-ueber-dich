@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Ein bisschen über dich</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+/* Layout: one card at a time; a trail of chosen answers above it lets her jump back to any step */
+:root {
+  --bg: #f6f2f5;
+  --surface: #ffffff;
+  --fg: #2b1f29;
+  --muted: #6f6170;
+  --line: #e6dbe3;
+  --accent: #8a3f72;
+  --accent-soft: #f3e2ee;
+  --accent-fg: #ffffff;
+  --leaf: #4f7a62;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1519; --surface: #261e24; --fg: #f3eaf0; --muted: #b5a6b2;
+    --line: #3a2f37; --accent: #e08cc4; --accent-soft: #3d2537; --accent-fg: #1b1519; --leaf: #8cc4a3;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1519; --surface: #261e24; --fg: #f3eaf0; --muted: #b5a6b2;
+  --line: #3a2f37; --accent: #e08cc4; --accent-soft: #3d2537; --accent-fg: #1b1519; --leaf: #8cc4a3;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+}
+.wrap {
+  max-width: 600px; margin: 0 auto; min-height: 100vh; min-height: 100dvh;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 40px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+/* trail */
+.topbar { display: flex; align-items: center; gap: 10px; min-height: 36px; }
+.back {
+  flex: none; font: inherit; font-size: 0.9rem; background: none; border: 0; color: var(--muted); cursor: pointer;
+  padding: 6px 8px; margin-left: -8px; border-radius: 8px;
+}
+.back:hover { color: var(--accent); }
+.back:focus-visible { outline: 2px solid var(--accent); }
+.trail { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; min-width: 0; flex: 1; padding-block: 2px; }
+.trail::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; font: inherit; font-size: 0.8rem; font-weight: 600; max-width: 180px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  padding: 5px 11px; border-radius: 99px; border: 0; cursor: pointer;
+  background: var(--accent-soft); color: var(--accent);
+  animation: chipIn .3s ease both;
+}
+.chip:hover { background: var(--accent); color: var(--accent-fg); }
+.chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@keyframes chipIn { from { opacity: 0; transform: scale(.8); } }
+
+/* stage + card */
+.stage { display: grid; align-items: start; }
+.card {
+  grid-area: 1 / 1; background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+  padding: 24px 20px 20px; display: flex; flex-direction: column; gap: 16px; min-width: 0;
+  box-shadow: 0 10px 30px -18px rgba(60, 20, 50, .35);
+}
+.card.in { animation: slideIn .38s cubic-bezier(.2,.8,.2,1) both; }
+.card.in.rev { animation-name: slideInRev; }
+.card.out { animation: slideOut .24s ease-in both; pointer-events: none; }
+.card.out.rev { animation-name: slideOutRev; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(40px) rotate(1.5deg); } to { opacity: 1; transform: none; } }
+@keyframes slideInRev { from { opacity: 0; transform: translateX(-40px) rotate(-1.5deg); } to { opacity: 1; transform: none; } }
+@keyframes slideOut { to { opacity: 0; transform: translateX(-50px) rotate(-2deg); } }
+@keyframes slideOutRev { to { opacity: 0; transform: translateX(50px) rotate(2deg); } }
+
+.topic { font-family: var(--font-display); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--leaf); font-weight: 500; }
+.card h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.35rem, 5vw, 1.75rem); line-height: 1.2; margin: -8px 0 0; text-wrap: balance; }
+
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opts.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.opt {
+  font: inherit; text-align: left; color: var(--fg); background: var(--bg);
+  border: 1.5px solid var(--line); border-radius: 14px; padding: 13px 14px; cursor: pointer;
+  display: flex; align-items: center; gap: 12px; min-width: 0;
+  transition: transform .12s, border-color .15s, background .15s;
+}
+.opts.tiles .opt { flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 14px; min-height: 104px; }
+.opts.tiles .opt:last-child:nth-child(odd) { grid-column: 1 / -1; min-height: 0; flex-direction: row; align-items: center; }
+.opt .ic { font-size: 1.7rem; line-height: 1; }
+.opt b {
+  flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--font-display); font-size: 0.85rem; border: 1.5px solid var(--line); color: var(--muted);
+  transition: background .15s, color .15s, border-color .15s;
+}
+.opt span.t { font-weight: 600; line-height: 1.3; }
+.opt:hover { border-color: var(--accent); }
+.opt:active { transform: scale(.97); }
+.opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.opt.sel { background: var(--accent-soft); border-color: var(--accent); }
+.opt.sel b { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.opt.pop .ic, .opt.pop b { animation: pop .3s ease; }
+@keyframes pop { 50% { transform: scale(1.3); } }
+
+textarea {
+  font: inherit; color: var(--fg); background: var(--bg); width: 100%; min-height: 110px; resize: vertical;
+  border: 1.5px solid var(--line); border-radius: 14px; padding: 12px 14px;
+}
+textarea:focus { outline: none; border-color: var(--accent); }
+
+/* intro + end */
+.big { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 8vw, 2.7rem); line-height: 1.05; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.big span { color: var(--accent); }
+.card p { margin: 0; color: var(--muted); }
+.cake { font-size: 3rem; line-height: 1; animation: wobble 2.4s ease-in-out infinite; transform-origin: 50% 90%; display: inline-block; }
+@keyframes wobble { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+.btn {
+  font: inherit; font-weight: 700; border: 0; border-radius: 99px; cursor: pointer;
+  padding: 13px 24px; background: var(--accent); color: var(--accent-fg);
+}
+.btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); padding: 9px 18px; font-size: 0.9rem; }
+.btn.link { background: none; color: var(--muted); padding: 9px 8px; font-weight: 600; }
+.btn:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.small { font-size: 0.88rem; color: var(--muted); }
+.wishlist { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.wishlist li { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: var(--bg); }
+.wishlist .lq { font-size: 0.8rem; color: var(--muted); }
+.wishlist .la { font-weight: 700; }
+.hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 20; }
+.hearts span { position: absolute; bottom: -40px; animation: rise 2.8s ease-out forwards; }
+@keyframes rise { to { transform: translateY(-110vh) rotate(25deg); opacity: 0; } }
+
+@media (max-width: 380px) { .opts.tiles { grid-template-columns: 1fr; } .opts.tiles .opt { min-height: 0; flex-direction: row; align-items: center; } }
+@media (prefers-reduced-motion: reduce) {
+  .card.in, .card.out, .opt.pop .ic, .opt.pop b, .hearts span, .cake, .chip { animation: none !important; }
+  .card.out { opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar" id="topbar" hidden>
+    <button class="back" id="back" type="button">← Zurück</button>
+    <div class="trail" id="trail"></div>
+  </div>
+  <div class="stage" id="stage"></div>
+</div>
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+
+<script>
+/* ---------- The wish tree ----------
+   Each node: topic, q, opts [ [icon?, text, next?] ], next (default for all opts).
+   type "text" = free-text answer. "end" finishes. */
+const CATS = [
+  ["🛋️", "Etwas für die Wohnung", "wohnen"],
+  ["🍳", "Etwas für die Küche", "kueche"],
+  ["💍", "Etwas nur für mich", "mich"],
+  ["✈️", "Ein Erlebnis oder eine Reise", "erlebnis"],
+  ["💆‍♀️", "Wellness & Entspannung", "wellness"],
+  ["🌿", "Etwas für mein Hobby", "hobby"],
+  ["🤔", "Weiß nicht genau", "surprise1"]
+];
+const N = {
+  start:  { topic: "Los geht's", q: "Worüber würdest du dich gerade am meisten freuen?", opts: CATS },
+  start2: { topic: "Noch etwas", q: "Schön! Was würde dir sonst noch Freude machen?", opts: CATS.slice(0, 6) },
+
+  /* Wohnung */
+  wohnen: { topic: "Wohnung", q: "Woran denkst du bei der Wohnung?", opts: [
+    ["🛋️", "Sofa oder Sessel", "sofa"], ["🛏️", "Schlafzimmer & Bett", "bett"],
+    ["💡", "Lampen & Licht", "licht"], ["🖼️", "Deko & Bilder", "deko"],
+    ["🧶", "Teppich, Kissen & Decken", "textil"], ["🪴", "Pflanzen & Balkon", "balkon"] ] },
+  sofa:   { topic: "Wohnung · Sofa", q: "Was genau wäre schön?", next: "wohnstil", opts: [
+    [, "Ein neues Sofa"], [, "Ein gemütlicher Sessel zum Lesen"], [, "Ein Relaxsessel mit Fußteil"], [, "Ein Hocker oder Pouf"] ] },
+  bett:   { topic: "Wohnung · Schlafzimmer", q: "Was würde dir im Schlafzimmer gefallen?", next: "wohnstil", opts: [
+    [, "Schöne neue Bettwäsche"], [, "Neue Kissen und Bettdecke"], [, "Ein Matratzen-Topper"], [, "Bademantel und flauschige Handtücher"] ] },
+  licht:  { topic: "Wohnung · Licht", q: "Welche Art von Licht?", next: "wohnstil", opts: [
+    [, "Eine Stehlampe"], [, "Eine Tischlampe"], [, "Kerzen und Lichterketten"], [, "Smarte Lampen, per Handy steuerbar"] ] },
+  deko:   { topic: "Wohnung · Deko", q: "Welche Deko spricht dich an?", next: "wohnstil", opts: [
+    [, "Bilder oder Wandkunst"], [, "Vasen und Blumen"], [, "Duftkerzen oder Raumduft"], [, "Ein Fotobuch mit Familienfotos"] ] },
+  textil: { topic: "Wohnung · Textilien", q: "Was davon am ehesten?", next: "wohnstil", opts: [
+    [, "Ein neuer Teppich"], [, "Kissen fürs Sofa"], [, "Eine weiche Kuscheldecke"], [, "Neue Vorhänge"] ] },
+  balkon: { topic: "Wohnung · Pflanzen", q: "Was wäre schön für Pflanzen und Balkon?", next: "wohnstil", opts: [
+    [, "Schöne Zimmerpflanzen"], [, "Balkonmöbel"], [, "Ein Kräutergarten"], [, "Blumenkästen und Töpfe"] ] },
+  wohnstil: { topic: "Stil", q: "Welcher Stil gefällt dir dabei?", next: "farben", opts: [
+    [, "Modern und schlicht"], [, "Gemütlich und warm"], [, "Elegant und edel"], [, "Natürlich, mit viel Holz"] ] },
+  farben: { topic: "Farben", q: "Welche Farben magst du am liebsten?", next: "more", opts: [
+    [, "Hell: Weiß, Beige, Creme"], [, "Warm: Braun, Terrakotta, Senf"], [, "Ruhig: Grün, Blau, Salbei"], [, "Kräftig: Rot, Pink, bunt"] ] },
+
+  /* Küche */
+  kueche: { topic: "Küche", q: "Was wäre schön für die Küche?", opts: [
+    ["⚙️", "Ein Küchengerät", "geraete"], ["🍲", "Töpfe & Pfannen", "toepfe"],
+    ["🍽️", "Geschirr & Gläser", "geschirr"], ["🧁", "Etwas zum Backen", "backen"],
+    ["☕", "Kaffee & Tee", "kaffee"], ["🔪", "Gute Messer", "kqual"] ] },
+  geraete: { topic: "Küche · Geräte", q: "Welches Gerät?", next: "kqual", opts: [
+    [, "Eine Kaffeemaschine"], [, "Eine Küchenmaschine zum Rühren und Kneten"], [, "Eine Heißluftfritteuse"], [, "Ein Mixer oder Smoothie-Maker"] ] },
+  toepfe: { topic: "Küche · Töpfe", q: "Was davon am ehesten?", next: "kqual", opts: [
+    [, "Ein neues Pfannenset"], [, "Ein Topfset"], [, "Ein Bräter aus Gusseisen"], [, "Ein Wok"] ] },
+  geschirr: { topic: "Küche · Geschirr", q: "Was würdest du gerne erneuern?", next: "kqual", opts: [
+    [, "Ein neues Tellerset"], [, "Schöne Wein- und Wassergläser"], [, "Kaffeetassen oder Teekanne"], [, "Servierplatten und Schüsseln"] ] },
+  backen: { topic: "Küche · Backen", q: "Was würde dir beim Backen Freude machen?", next: "kqual", opts: [
+    [, "Neue Backformen"], [, "Eine Küchenmaschine"], [, "Ein Backkurs"], [, "Ein schönes Backbuch"] ] },
+  kaffee: { topic: "Küche · Kaffee & Tee", q: "Was davon?", next: "kqual", opts: [
+    [, "Eine Siebträgermaschine"], [, "Ein Milchschäumer"], [, "Ein Teeset mit Kanne"], [, "Feine Kaffee- oder Teesorten"] ] },
+  kqual: { topic: "Küche", q: "Was ist dir dabei am wichtigsten?", next: "more", opts: [
+    [, "Beste Qualität, hält ewig"], [, "Es sieht schön aus"], [, "Praktisch und einfach"], [, "Etwas Neues zum Ausprobieren"] ] },
+
+  /* Für mich */
+  mich: { topic: "Für dich", q: "Woran denkst du für dich?", opts: [
+    ["💍", "Schmuck", "schmuck"], ["🌸", "Parfum & Kosmetik", "parfum"],
+    ["👗", "Kleidung", "kleidung"], ["👜", "Tasche oder Accessoire", "tasche"],
+    ["👟", "Schuhe", "schuhe"] ] },
+  schmuck: { topic: "Schmuck", q: "Welcher Schmuck?", next: "metall", opts: [
+    [, "Eine Halskette"], [, "Ohrringe"], [, "Ein Armband"], [, "Eine Uhr"] ] },
+  metall: { topic: "Schmuck", q: "Gold oder Silber?", next: "more", opts: [
+    [, "Gold"], [, "Silber"], [, "Roségold"], [, "Egal, Hauptsache schön"] ] },
+  parfum: { topic: "Parfum & Kosmetik", q: "Was für ein Duft passt zu dir?", next: "more", opts: [
+    [, "Blumig"], [, "Frisch und leicht"], [, "Warm und sinnlich"], [, "Lieber Pflege und Cremes"] ] },
+  kleidung: { topic: "Kleidung", q: "Was würdest du gerne tragen?", next: "farben", opts: [
+    [, "Ein kuscheliger Pullover"], [, "Ein schönes Kleid"], [, "Ein Mantel oder eine Jacke"], [, "Ein Schal oder Tuch"] ] },
+  tasche: { topic: "Tasche", q: "Welche Art?", next: "farben", opts: [
+    [, "Eine Handtasche"], [, "Ein großer Shopper"], [, "Ein Portemonnaie"], [, "Eine kleine Umhängetasche"] ] },
+  schuhe: { topic: "Schuhe", q: "Welche Schuhe?", next: "farben", opts: [
+    [, "Bequeme Sneaker"], [, "Elegante Schuhe"], [, "Stiefel"], [, "Gemütliche Hausschuhe"] ] },
+
+  /* Erlebnis */
+  erlebnis: { topic: "Erlebnis", q: "Was für ein Erlebnis?", opts: [
+    ["🧳", "Eine Reise", "reise"], ["🎭", "Konzert, Musical oder Theater", "kultur"],
+    ["🍷", "Feines Essen", "essen"], ["🎨", "Einen Kurs ausprobieren", "kurs"],
+    ["⛰️", "Ein Ausflug", "ausflug"] ] },
+  reise: { topic: "Reise", q: "Wohin würde es dich ziehen?", next: "mitwem", opts: [
+    [, "Eine Städtereise"], [, "Ans Meer"], [, "In die Berge und Natur"], [, "In ein Wellnesshotel"] ] },
+  kultur: { topic: "Kultur", q: "Was würdest du am liebsten sehen?", next: "mitwem", opts: [
+    [, "Ein Konzert"], [, "Ein Musical"], [, "Theater oder Oper"], [, "Eine Comedy-Show"] ] },
+  essen: { topic: "Essen", q: "Wie genießt du am liebsten?", next: "mitwem", opts: [
+    [, "Ein besonderes Restaurant"], [, "Eine Weinprobe"], [, "Ein schöner Brunch"], [, "Ein Koch kommt nach Hause"] ] },
+  kurs: { topic: "Kurs", q: "Welcher Kurs reizt dich?", next: "mitwem", opts: [
+    [, "Kochkurs"], [, "Töpfern"], [, "Malen"], [, "Tanzen"] ] },
+  ausflug: { topic: "Ausflug", q: "Was für ein Ausflug?", next: "mitwem", opts: [
+    [, "Eine Schifffahrt auf dem See"], [, "Bergbahn und Wandern"], [, "Ein Thermalbad"], [, "Ein schönes Städtchen entdecken"] ] },
+  mitwem: { topic: "Erlebnis", q: "Mit wem würdest du das am liebsten machen?", next: "more", opts: [
+    [, "Mit meinem Partner"], [, "Mit der ganzen Familie"], [, "Mit einer Freundin"], [, "Ganz für mich allein"] ] },
+
+  /* Wellness */
+  wellness: { topic: "Wellness", q: "Wie entspannst du am liebsten?", opts: [
+    ["🧖‍♀️", "Ein Spa-Tag", "mitwem"], ["💆‍♀️", "Eine Massage", "more"],
+    ["🏨", "Ein Wellness-Wochenende", "mitwem"], ["🛁", "Wellness für zu Hause", "wellhome"] ] },
+  wellhome: { topic: "Wellness zu Hause", q: "Was davon?", next: "more", opts: [
+    [, "Bademantel und weiche Handtücher"], [, "Badezusätze und Pflege"], [, "Ein Massagegerät"], [, "Duftkerzen und Raumduft"] ] },
+
+  /* Hobby */
+  hobby: { topic: "Hobby", q: "Für welches Hobby?", next: "hobbywas", opts: [
+    ["🌻", "Garten"], ["📚", "Lesen"], ["🧵", "Stricken & Nähen"],
+    ["🚶‍♀️", "Sport & Bewegung"], ["🎵", "Musik"], ["📷", "Fotos & Basteln"] ] },
+  hobbywas: { topic: "Hobby", q: "Was würde dir dabei Freude machen?", next: "more", opts: [
+    [, "Neues Material oder Zubehör"], [, "Ein Kurs, um besser zu werden"], [, "Ein Buch oder Gutschein dafür"], [, "Ein besonderes Gerät oder Werkzeug"] ] },
+
+  /* Überrasch mich */
+  surprise1: { topic: "Über dich", q: "Worüber freust du dich am meisten?", next: "surprise2", opts: [
+    [, "Etwas, das ich täglich verwenden kann"], [, "Etwas Persönliches mit emotionalem Wert"], [, "Etwas Hochwertiges und Besonderes"], [, "Ein Erlebnis, an das ich mich erinnere"] ] },
+  surprise2: { topic: "Über dich", q: "Was gönnst du dir selbst am seltensten?", next: "surprise3", opts: [
+    [, "Besondere, hochwertige Dinge"], [, "Wellness und Entspannung"], [, "Kleidung, Schuhe oder Schmuck"], [, "Besondere Erlebnisse und Reisen"] ] },
+  surprise3: { topic: "Über dich", q: "Wenn du dir spontan etwas gönnen dürftest, was wäre es?", next: "surprise4", opts: [
+    [, "Für etwas Schönes für die Wohnung"], [, "Für etwas für die Küche"], [, "Für Kleidung, Schmuck oder Kosmetik"], [, "Für eine Reise oder ein Erlebnis"] ] },
+  surprise4: { topic: "Über dich", q: "Was beschreibt dich am besten?", next: "more", opts: [
+    [, "Ich freue mich über praktische Dinge"], [, "Ich liebe schöne, hochwertige Sachen"], [, "Ich sammle lieber Erlebnisse als Dinge"], [, "Ich liebe persönliche Überraschungen"] ] },
+
+  /* Abschluss */
+  more: { topic: "Fast fertig", q: "Gibt es noch etwas, worüber du dich freuen würdest?", opts: [
+    ["➕", "Ja, ich habe noch eine Idee", "start2"], ["✅", "Nein, das war's", "konkret"] ] },
+  konkret: { topic: "Letzte Frage", type: "text", q: "Gibt es etwas, das dir in letzter Zeit besonders gefallen hat?", hint: "Zum Beispiel: eine Lampe im Möbelhaus, ein Duft, ein Ort … Du kannst das auch leer lassen.", next: "end" }
+};
+
+/* ---------- State ---------- */
+const KEY = "mama-wish-v3";
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = id => document.getElementById(id);
+const stage = $("stage");
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+
+let hist = [];      // [{node, label, value}]
+let cur = "intro";  // "intro" | node id | "end"
+let busy = false;
+
+try {
+  const s = JSON.parse(localStorage.getItem(KEY) || "null");
+  if (s && Array.isArray(s.hist) && (N[s.cur] || s.cur === "end")) { hist = s.hist; }
+} catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ hist, cur })); } catch (e) {} };
+
+/* ---------- Rendering ---------- */
+function topbar() {
+  const show = cur !== "intro";
+  $("topbar").hidden = !show;
+  if (!show) return;
+  $("trail").innerHTML = hist.map((h, i) =>
+    h.value ? `<button class="chip" type="button" data-i="${i}" title="Zurück zu: ${esc(h.value)}">${esc(h.value)}</button>` : ""
+  ).join("");
+  $("trail").querySelectorAll(".chip").forEach(c => c.onclick = () => jump(+c.dataset.i));
+  $("trail").scrollLeft = 99999;
+}
+
+function build() {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  if (cur === "intro") {
+    const resume = hist.length > 0;
+    card.innerHTML = `
+      <div><span class="cake" aria-hidden="true">✨</span></div>
+      <h1 class="big">Ein bisschen <span>über dich</span></h1>
+      <p>Ein kleines Spiel mit ein paar Fragen. Tippe einfach spontan an, was dir gefällt. Jede Antwort führt zur nächsten Frage, und du kannst jederzeit zurück.</p>
+      <div class="row">
+        <button class="btn" id="start" type="button">${resume ? "Weitermachen" : "Los geht's"}</button>
+        ${resume ? '<button class="btn link" id="fresh" type="button">Neu starten</button>' : ""}
+      </div>`;
+    card.querySelector("#start").onclick = () => {
+      if (resume) { const last = hist[hist.length - 1]; go(nextOf(last), 1); }
+      else go("start", 1);
+    };
+    const f = card.querySelector("#fresh");
+    if (f) f.onclick = () => { hist = []; save(); go("start", 1); };
+    return card;
+  }
+
+  if (cur === "end") {
+    const items = hist.filter(h => h.value && h.node !== "more");
+    card.innerHTML = `
+      <div><span class="cake" aria-hidden="true">💐</span></div>
+      <h1 class="big">Danke <span>dir!</span> ❤️</h1>
+      <p>Das war's schon. Kopiere deine Antworten und schick sie mir per WhatsApp oder Nachricht.</p>
+      <ul class="wishlist">${items.map(h => `<li><span class="lq">${esc(N[h.node].q)}</span><span class="la">${esc(h.value)}</span></li>`).join("")}</ul>
+      <div class="row"><button class="btn" id="copy" type="button">Antworten kopieren</button><span class="small" id="copied" aria-live="polite"></span></div>
+      <div class="row"><button class="btn ghost" id="edit" type="button">← Etwas ändern</button><button class="btn link" id="reset" type="button">Neu starten</button></div>`;
+    card.querySelector("#copy").onclick = () => copy(items, card);
+    card.querySelector("#edit").onclick = () => back();
+    card.querySelector("#reset").onclick = () => { hist = []; save(); go("intro", -1); };
+    return card;
+  }
+
+  const n = N[cur];
+  if (n.type === "text") {
+    card.innerHTML = `
+      <div class="topic">${esc(n.topic)}</div>
+      <h2>${esc(n.q)}</h2>
+      <p>${esc(n.hint)}</p>
+      <label class="small" for="free" hidden>Deine Antwort</label>
+      <textarea id="free" placeholder="Schreib hier, was dir einfällt …"></textarea>
+      <div class="row"><button class="btn" id="ok" type="button">Fertig</button><button class="btn link" id="skip" type="button">Überspringen</button></div>`;
+    const ta = card.querySelector("#free");
+    card.querySelector("#ok").onclick = () => answer(ta.value.trim(), n.next);
+    card.querySelector("#skip").onclick = () => answer("", n.next);
+    return card;
+  }
+
+  const tiles = n.opts.some(o => o[0]);
+  card.innerHTML = `
+    <div class="topic">${esc(n.topic)}</div>
+    <h2 id="qh">${esc(n.q)}</h2>
+    <div class="opts${tiles ? " tiles" : ""}" role="radiogroup" aria-labelledby="qh">
+      ${n.opts.map((o, i) => `<button type="button" class="opt" role="radio" aria-checked="false" data-i="${i}">
+        ${o[0] ? `<span class="ic" aria-hidden="true">${o[0]}</span>` : `<b>${"ABCDEFG"[i]}</b>`}
+        <span class="t">${esc(o[1])}</span></button>`).join("")}
+    </div>`;
+  card.querySelectorAll(".opt").forEach(b => b.onclick = () => pick(b));
+  return card;
+}
+
+function go(next, dir) {
+  if (busy) return;
+  const old = stage.querySelector(".card");
+  cur = next; save();
+  const card = build();
+  topbar();
+  const mount = () => {
+    stage.innerHTML = "";
+    card.classList.add("in"); if (dir < 0) card.classList.add("rev");
+    stage.appendChild(card);
+    const f = card.querySelector("textarea, .opt, .btn");
+    if (f) f.focus({ preventScroll: true });
+    window.scrollTo({ top: 0 });
+    if (cur === "end") hearts();
+    busy = false;
+  };
+  if (old && !reduced) {
+    busy = true;
+    old.classList.add("out"); if (dir < 0) old.classList.add("rev");
+    setTimeout(mount, 230);
+  } else mount();
+}
+
+function nextOf(h) {
+  if (h.next) return h.next;
+  return "start";
+}
+
+function pick(btn) {
+  if (busy) return;
+  const n = N[cur], o = n.opts[+btn.dataset.i];
+  btn.closest(".opts").querySelectorAll(".opt").forEach(x => { x.classList.remove("sel", "pop"); x.setAttribute("aria-checked", "false"); });
+  btn.classList.add("sel", "pop"); btn.setAttribute("aria-checked", "true");
+  busy = true;
+  setTimeout(() => { busy = false; answer(o[1], o[2] || n.next); }, reduced ? 100 : 380);
+}
+
+function answer(value, next) {
+  hist.push({ node: cur, value, next });
+  go(next, 1);
+}
+
+function back() {
+  if (!hist.length) { go("intro", -1); return; }
+  const h = hist.pop();
+  go(h.node, -1);
+}
+function jump(i) {
+  const h = hist[i];
+  hist = hist.slice(0, i);
+  go(h.node, -1);
+}
+
+function copy(items, card) {
+  const text = "Meine Antworten ✨\n\n" + items.map(h => `• ${N[h.node].q}\n  → ${h.value}`).join("\n");
+  const msg = card.querySelector("#copied");
+  const fallback = () => {
+    const r = document.createRange(); r.selectNodeContents(card.querySelector(".wishlist"));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    msg.textContent = "Text ist markiert, jetzt kopieren.";
+  };
+  try { navigator.clipboard.writeText(text).then(() => { msg.textContent = "Kopiert!"; }, fallback); }
+  catch (e) { fallback(); }
+}
+
+function hearts() {
+  if (reduced) return;
+  const h = $("hearts");
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement("span");
+    s.textContent = ["❤️", "🎈", "💕", "🎉"][i % 4];
+    s.style.left = Math.random() * 100 + "%";
+    s.style.animationDelay = Math.random() * 0.9 + "s";
+    s.style.fontSize = 16 + Math.random() * 20 + "px";
+    h.appendChild(s);
+    setTimeout(() => s.remove(), 4000);
+  }
+}
+
+$("back").onclick = back;
+document.addEventListener("keydown", e => {
+  if (!N[cur] || N[cur].type === "text" || e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key.toUpperCase();
+  let idx = "1234567".indexOf(k);
+  if (idx < 0) idx = "ABCDEFG".indexOf(k);
+  const b = idx >= 0 ? stage.querySelectorAll(".opt")[idx] : null;
+  if (b) pick(b);
+  else if (e.key === "Backspace" || e.key === "ArrowLeft") back();
+});
+
+go("intro", 1);
+</script>
+</body>
+</html>
