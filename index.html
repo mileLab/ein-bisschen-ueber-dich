@@ -180,32 +180,29 @@ const N = {
   start2: { topic: "Noch etwas", q: "Schön! Was würde dir sonst noch Freude machen?", opts: CATS },
 
   /* Wohnung */
-  wohnen: { topic: "Wohnung", q: "Woran denkst du bei der Wohnung?", opts: [
-    ["🛋️", "Sofa oder Sessel", "sofa"], ["🛏️", "Schlafzimmer & Bett", "bett"],
-    ["💡", "Lampen & Licht", "licht"], ["🖼️", "Deko & Bilder", "deko"],
-    ["🧶", "Teppich, Kissen & Decken", "textil"], ["🪴", "Pflanzen & Balkon", "balkon"],
-    ["🛁", "Badezimmer", "bad"], ["🗄️", "Möbel & Ordnung", "moebel"] ] },
-  sofa:   { topic: "Wohnung · Sofa", q: "Was genau wäre schön?", next: "wohnstil", opts: [
-    [, "Ein neues Sofa"], [, "Ein gemütlicher Sessel zum Lesen"], [, "Ein Relaxsessel mit Fußteil"], [, "Ein Hocker oder Pouf"],
-    [, "Ein Schlafsofa für Gäste"], [, "Ein großes Ecksofa"], [, "Ein neuer Couchtisch"], [, "Ein kleiner Beistelltisch"] ] },
+  wohnen: { topic: "Wohnung", q: "Was hättest du gerne Neues in der Wohnung?", opts: [
+    ["🛋️", "Eine neue Couch oder ein Sessel", "sofa"], ["🔌", "Küchengeräte (Mikrowelle, Kaffeemaschine …)", "geraete"],
+    ["🧹", "Haushaltsgeräte (Staubsauger …)", "haushalt"], ["📺", "Fernseher & Technik", "technik"],
+    ["🛏️", "Bett & Schlafzimmer", "bett"], ["💡", "Lampen & Licht", "licht"],
+    ["🖼️", "Deko, Teppiche & Pflanzen", "deko"], ["🗄️", "Möbel & Ordnung", "moebel"] ] },
+  sofa:   { topic: "Wohnung · Couch", q: "Was genau wäre schön?", next: "wohnstil", opts: [
+    [, "Eine neue Couch"], [, "Ein gemütlicher Sessel zum Lesen"], [, "Ein Relaxsessel mit Fußteil"], [, "Ein Hocker oder Pouf"],
+    [, "Ein Schlafsofa für Gäste"], [, "Eine große Ecksofa-Couch"], [, "Ein neuer Couchtisch"], [, "Ein kleiner Beistelltisch"] ] },
   bett:   { topic: "Wohnung · Schlafzimmer", q: "Was würde dir im Schlafzimmer gefallen?", next: "wohnstil", opts: [
     [, "Schöne neue Bettwäsche"], [, "Neue Kissen und Bettdecke"], [, "Ein Matratzen-Topper"], [, "Ein neues Bett"],
     [, "Eine schöne Tagesdecke"], [, "Eine Nachttischlampe"], [, "Ein Lichtwecker"], [, "Ein Spiegel oder eine Kommode"] ] },
   licht:  { topic: "Wohnung · Licht", q: "Welche Art von Licht?", next: "wohnstil", opts: [
     [, "Eine Stehlampe"], [, "Eine Tischlampe"], [, "Kerzen und Lichterketten"], [, "Smarte Lampen, per Handy steuerbar"],
     [, "Eine Leuchte über dem Esstisch"], [, "Eine Leselampe beim Sessel"], [, "Licht für Balkon oder Garten"], [, "Dimmbares Stimmungslicht"] ] },
-  deko:   { topic: "Wohnung · Deko", q: "Welche Deko spricht dich an?", next: "wohnstil", opts: [
-    [, "Bilder oder Wandkunst"], [, "Vasen und Blumen"], [, "Duftkerzen oder Raumduft"], [, "Ein Fotobuch mit Familienfotos"],
-    [, "Bilderrahmen mit Familienfotos"], [, "Ein schöner Spiegel"], [, "Skulpturen oder Figuren"], [, "Eine Wanduhr"] ] },
-  textil: { topic: "Wohnung · Textilien", q: "Was davon am ehesten?", next: "wohnstil", opts: [
-    [, "Ein neuer Teppich"], [, "Kissen fürs Sofa"], [, "Eine weiche Kuscheldecke"], [, "Neue Vorhänge"],
-    [, "Tischdecke und Servietten"], [, "Ein Läufer für den Flur"], [, "Sitzkissen für die Stühle"], [, "Ein Badteppich"] ] },
-  balkon: { topic: "Wohnung · Pflanzen", q: "Was wäre schön für Pflanzen und Balkon?", next: "wohnstil", opts: [
-    [, "Schöne Zimmerpflanzen"], [, "Balkonmöbel"], [, "Ein Kräutergarten"], [, "Blumenkästen und Töpfe"],
-    [, "Ein Hängesessel"], [, "Ein Sonnenschirm"], [, "Eine Lichterkette für draußen"], [, "Ein Vogelhaus oder Insektenhotel"] ] },
-  bad:    { topic: "Wohnung · Bad", q: "Was würde dein Bad schöner machen?", next: "wohnstil", opts: [
-    [, "Flauschige Handtücher"], [, "Ein Bademantel"], [, "Badezusätze und Pflege"], [, "Ein schönes Seifenspender-Set"],
-    [, "Ein neuer Badteppich"], [, "Ein Spiegel mit Licht"], [, "Ein Regal für mehr Ordnung"], [, "Duftkerzen fürs Bad"] ] },
+  haushalt: { topic: "Wohnung · Haushalt", q: "Welches Gerät würde dir den Alltag erleichtern?", next: "more", opts: [
+    [, "Ein neuer Staubsauger"], [, "Ein Saugroboter"], [, "Ein Akku-Staubsauger"], [, "Ein Wischroboter oder Dampfreiniger"],
+    [, "Ein Bügeleisen oder eine Dampfstation"], [, "Ein Luftreiniger"], [, "Ein Ventilator oder Heizlüfter"], [, "Ein Wäschetrockner"] ] },
+  technik: { topic: "Wohnung · Technik", q: "Was davon?", next: "more", opts: [
+    [, "Ein neuer Fernseher"], [, "Eine Soundbar für besseren Ton"], [, "Ein Lautsprecher für Musik"], [, "Ein Tablet"],
+    [, "Ein digitaler Bilderrahmen"], [, "Ein schönes Radio"], [, "Kopfhörer"], [, "Ein neues Handy"] ] },
+  deko:   { topic: "Wohnung · Deko", q: "Was spricht dich an?", next: "wohnstil", opts: [
+    [, "Bilder oder Wandkunst"], [, "Vasen und Blumen"], [, "Duftkerzen oder Raumduft"], [, "Bilderrahmen mit Familienfotos"],
+    [, "Ein neuer Teppich"], [, "Kissen und Kuscheldecken"], [, "Neue Vorhänge"], [, "Schöne Zimmerpflanzen"] ] },
   moebel: { topic: "Wohnung · Möbel", q: "Welches Möbelstück?", next: "wohnstil", opts: [
     [, "Ein Sideboard oder eine Kommode"], [, "Ein Regal"], [, "Ein neuer Esstisch"], [, "Neue Stühle"],
     [, "Ein Schrank"], [, "Eine Garderobe für den Eingang"], [, "Ein kleiner Schreibtisch"], [, "Schöne Körbe und Boxen"] ] },
@@ -223,8 +220,8 @@ const N = {
     ["☕", "Kaffee & Tee", "kaffee"], ["🔪", "Gute Messer", "kqual"],
     ["📖", "Kochbücher", "kqual"], ["🫙", "Ordnung & Vorratsdosen", "kqual"] ] },
   geraete: { topic: "Küche · Geräte", q: "Welches Gerät?", next: "kqual", opts: [
-    [, "Eine Kaffeemaschine"], [, "Eine Küchenmaschine zum Rühren und Kneten"], [, "Eine Heißluftfritteuse"], [, "Ein Mixer oder Smoothie-Maker"],
-    [, "Wasserkocher und Toaster"], [, "Ein Dampfgarer"], [, "Ein Brotbackautomat"], [, "Eine Eismaschine"] ] },
+    [, "Eine Mikrowelle"], [, "Eine Kaffeemaschine"], [, "Eine Küchenmaschine zum Rühren und Kneten"], [, "Eine Heißluftfritteuse"],
+    [, "Ein Mixer oder Smoothie-Maker"], [, "Wasserkocher und Toaster"], [, "Ein Dampfgarer"], [, "Ein Brotbackautomat"] ] },
   toepfe: { topic: "Küche · Töpfe", q: "Was davon am ehesten?", next: "kqual", opts: [
     [, "Ein neues Pfannenset"], [, "Ein Topfset"], [, "Ein Bräter aus Gusseisen"], [, "Ein Wok"],
     [, "Eine Grillpfanne"], [, "Ein Schnellkochtopf"], [, "Schöne Auflaufformen"], [, "Ein Raclette- oder Fondue-Set"] ] },
